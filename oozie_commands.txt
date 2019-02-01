@@ -2,7 +2,12 @@
 in the same directory in your hdfs. hive-config is the site.xml from '/usr/lib/hive/conf'.
 2) Ensure the .properties file on your local machine has the correct
 application path, pointing to the directory that contains the above files.
-3) Run 'export OOZIE_URL=http://localhost:11000/oozie'
-4) Run 'oozie job -run -config project2.properties'
+3) put Gender_StatsData.txt in your hdfs under /user/cloudera/project2/input
+4) put Gender_StatsCountry.txt in your hdfs under /uder/cloudera/project2/input
+5) Run 'export OOZIE_URL=http://localhost:11000/oozie'
+6) Run 'oozie job -run -config project2.properties'
 	-this should output a jobID
-5) Run 'oozie job -info [jobID]' to check the status
+7) Run 'oozie job -info [jobID]' to check the status
+	**OR just check Hue Scheduler
+
+oozie job -oozie http://localhost:11000/oozie -kill [JobID]

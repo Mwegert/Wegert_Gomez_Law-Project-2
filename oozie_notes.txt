@@ -1,0 +1,25 @@
+9870
+9867
+location: /usr/lib/hive/conf
+site.xml
+
+export OOZIE_URL=http://localhost:11000/oozie
+oozie job -run -config project2.properties
+
+oozie job --oozie http://localhost:11000/oozie -kill 0000000-190123102142944-oozie-oozi-W
+
+oozie examples in /usr/share/doc/oozie-4.1.0+cdh5.13.0+458
+
+KILL ALL: 
+oozie jobs -oozie  http://localhost:11000/oozie/ -kill -filter user=cloudera -jobtype bundle & oozie jobs -oozie  http://localhost:11000/oozie/ -kill -filter user=cloudera -jobtype coordinator & oozie jobs -oozie  http://localhost:11000/oozie/ -kill -filter user=cloudera
+
+
+ <job-xml>hive-config.xml</job-xml> needed?
+ 
+set hive.exec.max.dynamic.partitions.pernode = 1000;
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.mapred.mode = nonstrict;
+set hive.exec.max.dynamic.partitions = 1000;
+
+job log: workflow -> tasks -> click job id

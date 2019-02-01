@@ -1,12 +1,39 @@
-<workflow-app name="Project2-WF" xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="Project2-WF" xmlns="uri:oozie:workflow:0.2">
  <start to="myHiveAction"/>
 
 <action name="myHiveAction">
  <hive xmlns = "uri:oozie:hive-action:0.2">
  	<job-tracker>${jobTracker}</job-tracker>
  	<name-node>${nameNode}</name-node>
- 	<job-xml>hive-config.xml</job-xml>
- 	<script>test.hql</script>
+	<prepare>
+		<delete path = "${JobOutput}"/>
+	</prepare>
+	
+	<configuration>
+		<property>
+			<name>hive.exec.max.dynamic.partitions.pernode</name>
+			<value>1000</value>
+		</property>
+		<property>
+			<name>hive.exec.dynamic.partition</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>hive.exec.dynamic.partition.mode</name>
+			<value>nonstrict</value>
+		</property>
+		<property>
+			<name>hive.mapred.mode</name>
+			<value>nonstrict</value>
+		</property>
+		<property>
+			<name>hive.exec.max.dynamic.partitions</name>
+			<value>1000</value>
+		</property>
+	</configuration>
+	
+ 	<script>project2.hql</script>
+	<param>OutputDir = ${JobOutput}</param>
  </hive>
  <ok to="success"/>
  <error to="fail"/>

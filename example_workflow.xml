@@ -1,0 +1,19 @@
+<workflow-app name="Project2-WF" xmlns="uri:oozie:workflow:0.2">
+ <start to="myHiveAction"/>
+
+<action name="myHiveAction">
+ <hive xmlns = "uri:oozie:hive-action:0.2">
+ 	<job-tracker>${jobTracker}</job-tracker>
+ 	<name-node>${nameNode}</name-node>
+ 	<job-xml>hive-config.xml</job-xml>
+ 	<script>test.hql</script>
+ </hive>
+ <ok to="success"/>
+ <error to="fail"/>
+</action>
+
+ <kill name="fail">
+ 	<message>The Map-Reduce job failed!</message>
+ </kill>
+ <end name="success"/>
+</workflow-app>
