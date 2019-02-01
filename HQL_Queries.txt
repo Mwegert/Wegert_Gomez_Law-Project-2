@@ -73,7 +73,7 @@ load data local inpath '/media/sf_Hadoop/Gender_StatsCountryv1.txt' into table c
 insert overwrite table gender_stats partition(indicator_code) 
 select gender_stats.* from gender_stats left outer join countries 
 on gender_stats.country_code = countries.country_code 
-where countries.currency_unit <> null and 
+where countries.currency_unit <> '' and 
 coalesce(
 gender_stats.y1960, gender_stats.y1961, gender_stats.y1962, gender_stats.y1963, gender_stats.y1964, 
 gender_stats.y1965, gender_stats.y1966, gender_stats.y1967, gender_stats.y1968, gender_stats.y1969, 
@@ -86,7 +86,7 @@ gender_stats.y1995, gender_stats.y1996, gender_stats.y1997, gender_stats.y1998, 
 gender_stats.y2000, gender_stats.y2001,gender_stats.y2002, gender_stats.y2003, gender_stats.y2004, 
 gender_stats.y2005, gender_stats.y2006, gender_stats.y2007, gender_stats.y2008, gender_stats.y2009, 
 gender_stats.y2010, gender_stats.y2011, gender_stats.y2012, gender_stats.y2013, gender_stats.y2014, 
-gender_stats.y2015, gender_stats.y2016) <> null;
+gender_stats.y2015, gender_stats.y2016) <> 0;
 
 --Q1
 insert overwrite directory '/user/cloudera/project2/out/q1'
