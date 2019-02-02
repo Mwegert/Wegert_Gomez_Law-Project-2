@@ -1,0 +1,127 @@
+-- *********************************** MYSQL *****************************************
+create database if not exists p2load;
+use p2load;
+
+create table if not exists gender_stats_raw(country_name varchar(255), country_code char(3), indicator_name varchar(255), indicator_code varchar(255), 
+y1960 decimal(15,8), y1961 decimal(15,8), y1962 decimal(15,8), y1963 decimal(15,8), y1964 decimal(15,8),
+y1965 decimal(15,8), y1966 decimal(15,8), y1967 decimal(15,8), y1968 decimal(15,8), y1969 decimal(15,8), 
+y1970 decimal(15,8), y1971 decimal(15,8), y1972 decimal(15,8), y1973 decimal(15,8), y1974 decimal(15,8), 
+y1975 decimal(15,8), y1976 decimal(15,8), y1977 decimal(15,8), y1978 decimal(15,8), y1979 decimal(15,8), 
+y1980 decimal(15,8), y1981 decimal(15,8), y1982 decimal(15,8), y1983 decimal(15,8), y1984 decimal(15,8), 
+y1985 decimal(15,8), y1986 decimal(15,8), y1987 decimal(15,8), y1988 decimal(15,8), y1989 decimal(15,8), 
+y1990 decimal(15,8), y1991 decimal(15,8), y1992 decimal(15,8), y1993 decimal(15,8), y1994 decimal(15,8), 
+y1995 decimal(15,8), y1996 decimal(15,8), y1997 decimal(15,8), y1998 decimal(15,8), y1999 decimal(15,8), 
+y2000 decimal(15,8), y2001 decimal(15,8), y2002 decimal(15,8), y2003 decimal(15,8), y2004 decimal(15,8), 
+y2005 decimal(15,8), y2006 decimal(15,8), y2007 decimal(15,8), y2008 decimal(15,8), y2009 decimal(15,8), 
+y2010 decimal(15,8), y2011 decimal(15,8), y2012 decimal(15,8), y2013 decimal(15,8), y2014 decimal(15,8), 
+y2015 decimal(15,8), y2016 decimal(15,8));
+
+truncate gender_stats_raw;
+load data local infile '/media/sf_SharedWorkspace/project2_input/Gender_StatsData.txt' into table gender_stats_raw
+fields terminated by ','
+optionally enclosed by '"';
+
+create table gender_stats(country_code char(3),
+y1960 decimal(15,8), y1961 decimal(15,8), y1962 decimal(15,8), y1963 decimal(15,8), y1964 decimal(15,8),
+y1965 decimal(15,8), y1966 decimal(15,8), y1967 decimal(15,8), y1968 decimal(15,8), y1969 decimal(15,8), 
+y1970 decimal(15,8), y1971 decimal(15,8), y1972 decimal(15,8), y1973 decimal(15,8), y1974 decimal(15,8), 
+y1975 decimal(15,8), y1976 decimal(15,8), y1977 decimal(15,8), y1978 decimal(15,8), y1979 decimal(15,8), 
+y1980 decimal(15,8), y1981 decimal(15,8), y1982 decimal(15,8), y1983 decimal(15,8), y1984 decimal(15,8), 
+y1985 decimal(15,8), y1986 decimal(15,8), y1987 decimal(15,8), y1988 decimal(15,8), y1989 decimal(15,8), 
+y1990 decimal(15,8), y1991 decimal(15,8), y1992 decimal(15,8), y1993 decimal(15,8), y1994 decimal(15,8), 
+y1995 decimal(15,8), y1996 decimal(15,8), y1997 decimal(15,8), y1998 decimal(15,8), y1999 decimal(15,8), 
+y2000 decimal(15,8), y2001 decimal(15,8), y2002 decimal(15,8), y2003 decimal(15,8), y2004 decimal(15,8), 
+y2005 decimal(15,8), y2006 decimal(15,8), y2007 decimal(15,8), y2008 decimal(15,8), y2009 decimal(15,8), 
+y2010 decimal(15,8), y2011 decimal(15,8), y2012 decimal(15,8), y2013 decimal(15,8), y2014 decimal(15,8), 
+y2015 decimal(15,8), y2016 decimal(15,8), indicator_code varchar(255));
+
+
+-- COUNTRIES TABLE FOR CLEANSING
+create table if not exists countries(Country_Code char(3),Short_Name varchar(255),Table_Name varchar(255),Long_Name varchar(255),2_alpha_code varchar(255),Currency_Unit varchar(255));
+load data local infile '/media/sf_SharedWorkspace/project2_input/Gender_StatsCountry.txt' into table countries
+fields terminated by ','
+optionally enclosed by '"';
+
+
+insert into gender_stats(country_code, y1960, y1961, y1962, y1963, y1964,
+y1965, y1966, y1967, y1968, y1969, y1970, y1971, y1972, y1973, y1974, 
+y1975, y1976, y1977, y1978, y1979, y1980, y1981, y1982, y1983, y1984, 
+y1985, y1986, y1987, y1988, y1989, y1990, y1991, y1992, y1993, y1994, 
+y1995, y1996, y1997, y1998, y1999, y2000, y2001, y2002, y2003, y2004, 
+y2005, y2006, y2007, y2008, y2009, y2010, y2011, y2012, y2013, y2014, 
+y2015, y2016, indicator_code)
+select gender_stats_raw.country_code,
+gender_stats_raw.y1960, gender_stats_raw.y1961, gender_stats_raw.y1962, gender_stats_raw.y1963, gender_stats_raw.y1964,
+gender_stats_raw.y1965, gender_stats_raw.y1966, gender_stats_raw.y1967, gender_stats_raw.y1968, gender_stats_raw.y1969, gender_stats_raw.y1970, gender_stats_raw.y1971, gender_stats_raw.y1972, gender_stats_raw.y1973, gender_stats_raw.y1974, 
+gender_stats_raw.y1975, gender_stats_raw.y1976, gender_stats_raw.y1977, gender_stats_raw.y1978, gender_stats_raw.y1979, gender_stats_raw.y1980, gender_stats_raw.y1981, gender_stats_raw.y1982, gender_stats_raw.y1983, gender_stats_raw.y1984, 
+gender_stats_raw.y1985, gender_stats_raw.y1986, gender_stats_raw.y1987, gender_stats_raw.y1988, gender_stats_raw.y1989, gender_stats_raw.y1990, gender_stats_raw.y1991, gender_stats_raw.y1992, gender_stats_raw.y1993, gender_stats_raw.y1994, 
+gender_stats_raw.y1995, gender_stats_raw.y1996, gender_stats_raw.y1997, gender_stats_raw.y1998, gender_stats_raw.y1999, gender_stats_raw.y2000, gender_stats_raw.y2001, gender_stats_raw.y2002, gender_stats_raw.y2003, gender_stats_raw.y2004, 
+gender_stats_raw.y2005, gender_stats_raw.y2006, gender_stats_raw.y2007, gender_stats_raw.y2008, gender_stats_raw.y2009, gender_stats_raw.y2010, gender_stats_raw.y2011, gender_stats_raw.y2012, gender_stats_raw.y2013, gender_stats_raw.y2014, 
+gender_stats_raw.y2015, gender_stats_raw.y2016, gender_stats_raw.indicator_code
+from gender_stats_raw left outer join countries
+on gender_stats_raw.country_code = countries.Country_Code
+where countries.currency_unit <> ""
+and greatest(abs(gender_stats_raw.y1960), abs(gender_stats_raw.y1961), abs(gender_stats_raw.y1962), abs(gender_stats_raw.y1963), abs(gender_stats_raw.y1964),
+abs(gender_stats_raw.y1965), abs(gender_stats_raw.y1966), abs(gender_stats_raw.y1967), abs(gender_stats_raw.y1968), abs(gender_stats_raw.y1969), abs(gender_stats_raw.y1970), abs(gender_stats_raw.y1971), abs(gender_stats_raw.y1972), abs(gender_stats_raw.y1973), abs(gender_stats_raw.y1974), 
+abs(gender_stats_raw.y1975), abs(gender_stats_raw.y1976), abs(gender_stats_raw.y1977), abs(gender_stats_raw.y1978), abs(gender_stats_raw.y1979), abs(gender_stats_raw.y1980), abs(gender_stats_raw.y1981), abs(gender_stats_raw.y1982), abs(gender_stats_raw.y1983), abs(gender_stats_raw.y1984), 
+abs(gender_stats_raw.y1985), abs(gender_stats_raw.y1986), abs(gender_stats_raw.y1987), abs(gender_stats_raw.y1988), abs(gender_stats_raw.y1989), abs(gender_stats_raw.y1990), abs(gender_stats_raw.y1991), abs(gender_stats_raw.y1992), abs(gender_stats_raw.y1993), abs(gender_stats_raw.y1994), 
+abs(gender_stats_raw.y1995), abs(gender_stats_raw.y1996), abs(gender_stats_raw.y1997), abs(gender_stats_raw.y1998), abs(gender_stats_raw.y1999), abs(gender_stats_raw.y2000), abs(gender_stats_raw.y2001), abs(gender_stats_raw.y2002), abs(gender_stats_raw.y2003), abs(gender_stats_raw.y2004), 
+abs(gender_stats_raw.y2005), abs(gender_stats_raw.y2006), abs(gender_stats_raw.y2007), abs(gender_stats_raw.y2008), abs(gender_stats_raw.y2009), abs(gender_stats_raw.y2010), abs(gender_stats_raw.y2011), abs(gender_stats_raw.y2012), abs(gender_stats_raw.y2013), abs(gender_stats_raw.y2014), 
+abs(gender_stats_raw.y2015), abs(gender_stats_raw.y2016)) <> 0;
+
+
+-- *********************************** HIVE *****************************************
+create database if not exists project2_aggregate;
+use project2_aggregate;
+
+create table if not exists gender_stats( country_code varchar(3), 
+y1960 decimal(15,8), y1961 decimal(15,8), y1962 decimal(15,8), y1963 decimal(15,8), y1964 decimal(15,8), 
+y1965 decimal(15,8), y1966 decimal(15,8), y1967 decimal(15,8), y1968 decimal(15,8), y1969 decimal(15,8), 
+y1970 decimal(15,8), y1971 decimal(15,8), y1972 decimal(15,8), y1973 decimal(15,8), y1974 decimal(15,8), 
+y1975 decimal(15,8), y1976 decimal(15,8), y1977 decimal(15,8), y1978 decimal(15,8), y1979 decimal(15,8), 
+y1980 decimal(15,8), y1981 decimal(15,8), y1982 decimal(15,8), y1983 decimal(15,8), y1984 decimal(15,8), 
+y1985 decimal(15,8), y1986 decimal(15,8), y1987 decimal(15,8), y1988 decimal(15,8), y1989 decimal(15,8), 
+y1990 decimal(15,8), y1991 decimal(15,8), y1992 decimal(15,8), y1993 decimal(15,8), y1994 decimal(15,8), 
+y1995 decimal(15,8), y1996 decimal(15,8), y1997 decimal(15,8), y1998 decimal(15,8), y1999 decimal(15,8), 
+y2000 decimal(15,8), y2001 decimal(15,8), y2002 decimal(15,8), y2003 decimal(15,8), y2004 decimal(15,8), 
+y2005 decimal(15,8), y2006 decimal(15,8), y2007 decimal(15,8), y2008 decimal(15,8), y2009 decimal(15,8), 
+y2010 decimal(15,8), y2011 decimal(15,8), y2012 decimal(15,8), y2013 decimal(15,8), y2014 decimal(15,8), 
+y2015 decimal(15,8), y2016 decimal(15,8))
+partitioned by (indicator_code varchar(20))
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+-- *********************************** SQOOP *****************************************
+--mapreduce to hdfs, so target directory must not exist in hdfs
+sqoop import --connect jdbc:mysql://localhost/p2load --username root --password cloudera --table gender_stats --target-dir '/user/cloudera/project2/sqoop_aggregate' -m 1
+
+-- *********************************** HIVE *****************************************
+use project2_aggregate;
+
+create temporary table gender_stats_temp(country_code char(3),
+y1960 decimal(15,8), y1961 decimal(15,8), y1962 decimal(15,8), y1963 decimal(15,8), y1964 decimal(15,8),
+y1965 decimal(15,8), y1966 decimal(15,8), y1967 decimal(15,8), y1968 decimal(15,8), y1969 decimal(15,8), 
+y1970 decimal(15,8), y1971 decimal(15,8), y1972 decimal(15,8), y1973 decimal(15,8), y1974 decimal(15,8), 
+y1975 decimal(15,8), y1976 decimal(15,8), y1977 decimal(15,8), y1978 decimal(15,8), y1979 decimal(15,8), 
+y1980 decimal(15,8), y1981 decimal(15,8), y1982 decimal(15,8), y1983 decimal(15,8), y1984 decimal(15,8), 
+y1985 decimal(15,8), y1986 decimal(15,8), y1987 decimal(15,8), y1988 decimal(15,8), y1989 decimal(15,8), 
+y1990 decimal(15,8), y1991 decimal(15,8), y1992 decimal(15,8), y1993 decimal(15,8), y1994 decimal(15,8), 
+y1995 decimal(15,8), y1996 decimal(15,8), y1997 decimal(15,8), y1998 decimal(15,8), y1999 decimal(15,8), 
+y2000 decimal(15,8), y2001 decimal(15,8), y2002 decimal(15,8), y2003 decimal(15,8), y2004 decimal(15,8), 
+y2005 decimal(15,8), y2006 decimal(15,8), y2007 decimal(15,8), y2008 decimal(15,8), y2009 decimal(15,8), 
+y2010 decimal(15,8), y2011 decimal(15,8), y2012 decimal(15,8), y2013 decimal(15,8), y2014 decimal(15,8), 
+y2015 decimal(15,8), y2016 decimal(15,8), indicator_code varchar(20))
+row format delimited
+fields terminated by ',';
+
+load data inpath '/user/cloudera/project2/sqoop_aggregate' into table gender_stats_temp;
+
+set hive.exec.max.dynamic.partitions.pernode = 1000;
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.mapred.mode = nonstrict;
+set hive.exec.max.dynamic.partitions = 1000;
+
+insert overwrite table gender_stats partition(indicator_code)
+select * from gender_stats_temp;
