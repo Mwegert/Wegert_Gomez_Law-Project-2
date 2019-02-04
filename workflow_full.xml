@@ -1,0 +1,73 @@
+<workflow-app name="Project2-WF" xmlns="uri:oozie:workflow:0.2">
+ 
+<start to="shell-node"/>
+<action name="shell-node">
+        <shell xmlns="uri:oozie:shell-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+            <exec>echo</exec>
+            <argument>my_output=Hello Oozie</argument>
+            <capture-output/>
+        </shell>
+        <ok to="check-output"/>
+        <error to="fail"/>
+</action>
+
+<decision name="check-output">
+        <switch>
+            <case to="myHiveAction">
+                ${wf:actionData('shell-node')['my_output'] eq 'Hello Oozie'}
+            </case>
+            <default to="fail-output"/>
+        </switch>
+</decision>
+	
+<action name="myHiveAction">
+ <hive xmlns = "uri:oozie:hive-action:0.2">
+ 	<job-tracker>${jobTracker}</job-tracker>
+ 	<name-node>${nameNode}</name-node>
+	<prepare>
+		<delete path = "${JobOutput}"/>
+	</prepare>
+	
+	<configuration>
+		<property>
+			<name>hive.exec.max.dynamic.partitions.pernode</name>
+			<value>1000</value>
+		</property>
+		<property>
+			<name>hive.exec.dynamic.partition</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>hive.exec.dynamic.partition.mode</name>
+			<value>nonstrict</value>
+		</property>
+		<property>
+			<name>hive.mapred.mode</name>
+			<value>nonstrict</value>
+		</property>
+		<property>
+			<name>hive.exec.max.dynamic.partitions</name>
+			<value>1000</value>
+		</property>
+	</configuration>
+	
+ 	<script>project2.hql</script>
+	<param>OutputDir = ${JobOutput}</param>
+ </hive>
+ <ok to="success"/>
+ <error to="fail"/>
+</action>
+
+ <kill name="fail">
+ 	<message>The Map-Reduce job failed!</message>
+ </kill>
+ <end name="success"/>
+</workflow-app>

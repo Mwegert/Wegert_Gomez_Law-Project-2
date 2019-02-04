@@ -1,5 +1,5 @@
-<workflow-app name="Project2-WF" xmlns="uri:oozie:workflow:0.2">
- <start to="myHiveAction"/>
+<workflow-app name="example_shell_WF" xmlns="uri:oozie:workflow:0.2">
+<start to="myHiveAction"/>
 
 <action name="myHiveAction">
  <hive xmlns = "uri:oozie:hive-action:0.2">
@@ -59,4 +59,4 @@
  	<message>The Map-Reduce job failed!</message>
  </kill>
  <end name="success"/>
-</workflow-app>
+ </workflow-app>
