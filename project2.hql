@@ -1,5 +1,5 @@
-create database if not exists project_2;
-use project_2;
+create database if not exists project2;
+use project2;
 
 --Q1
 insert overwrite directory '/user/cloudera/project2/out/q1'

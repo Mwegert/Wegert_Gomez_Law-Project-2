@@ -35,26 +35,10 @@
  	<script>project2.hql</script>
 	<param>OutputDir = ${JobOutput}</param>
  </hive>
- <ok to="sqoop-node"/>
+ <ok to="success"/>
  <error to="fail"/>
 </action>
 
-<action name="sqoop-node">
-       <sqoop xmlns="uri:oozie:sqoop-action:0.2">
-           <job-tracker>${jobTracker}</job-tracker>
-           <name-node>${nameNode}</name-node>
-           <configuration>
-               <property>
-                   <name>mapred.job.queue.name</name>
-                   <value>${queueName}</value>
-               </property>
-           </configuration>
-           <command>sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS fe_prm_edu"</command>
-       </sqoop>
-       <ok to="success"/>
-       <error to="fail"/>
-</action>
-   
  <kill name="fail">
  	<message>The Map-Reduce job failed!</message>
  </kill>
