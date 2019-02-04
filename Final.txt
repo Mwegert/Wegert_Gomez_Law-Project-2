@@ -1,0 +1,75 @@
+#Q1p1
+insert overwrite directory '/user/cloudera/project2/out/q1'
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ','
+stored as textfile
+select country_code,
+cast(coalesce(
+y2016+2016,y2015+2015,y2014+2014,y2013+2013,y2012+2012,y2011+2011,y2010+2010)-
+coalesce(y2016,y2015,y2014,y2013,y2012,y2011,y2010) as int) as year, 
+coalesce(y2016,y2015,y2014,y2013,y2012,y2011,y2010) as value
+from gender_stats where coalesce(y2016,y2015,y2014,y2013,y2012,y2011,y2010) < 30.0 
+and indicator_code = 'SE.PRM.CMPL.FE.ZS';
+
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS fe_prm_edu"
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS fe_prm_edu(country varchar(3) primary key, year int, percent decimal(15,8))"
+sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table fe_prm_edu --export-dir /user/cloudera/project2/out/q1/000000_0
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q1 as select * from fe_prm_edu order by percent asc"
+
+#Q1p2
+insert overwrite directory '/user/cloudera/project2/out/q1p2'
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ','
+stored as textfile
+select country_code,
+cast(coalesce(
+y2016+2016,y2015+2015,y2014+2014,y2013+2013,y2012+2012,y2011+2011,y2010+2010)-
+coalesce(y2016,y2015,y2014,y2013,y2012,y2011,y2010) as int) as year, 
+coalesce(y2016,y2015,y2014,y2013,y2012,y2011,y2010) as value
+from gender_stats where coalesce(y2016,y2015,y2014,y2013,y2012,y2011,y2010) < 30.0 
+and indicator_code = 'SE.TER.CMPL.FE.ZS';
+
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS fe_ter_edu"
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS fe_ter_edu(country varchar(3) primary key, year int, percent decimal(15,8))"
+sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table fe_ter_edu --export-dir /user/cloudera/project2/out/q1p2/000000_0
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q1p2 as select * from fe_ter_edu order by percent asc"
+
+#Q3
+insert overwrite directory '/user/cloudera/project2/out/q3'
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ','
+stored as textfile
+select country_code,
+cast(coalesce(Y2016+2016,Y2015+2015,Y2014+2014,Y2013+2013)-coalesce(Y2016,Y2015,Y2014,Y2013) as int) as yearL,
+coalesce(Y2016,y2015,y2014,y2013) as valueL,
+cast(coalesce(Y2000+2000,Y2001+2001,Y1999+1999,Y2002+2002, y1998+1998)-coalesce(Y2000,Y2001,Y1999,Y2002,1998) as int) as yearF,
+coalesce(y2000,y2001,y1999,y2002,y1998) as valueF,
+(((coalesce(Y2016,y2015,y2014,y2013)-coalesce(y2000,y2001,y1999,y2002,y1998))/coalesce(y2000,y2001,y1999,y2002,y1998))
+(cast(coalesce(Y2016+2016,Y2015+2015,Y2014+2014,Y2013+2013)-coalesce(Y2016,Y2015,Y2014,Y2013) as int) - 
+cast(coalesce(Y2000+2000,Y2001+2001,Y1999+1999,Y2002+20002, y1998+1998)-coalesce(Y2000,Y2001,Y1999,Y2002,1998) as int))) as avg
+from gender_stats where indicator_code = 'SL.TLF.CACT.MA.ZS';
+
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS ma_tlf"
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS ma_tlf(country varchar(3) primary key, beg_year int, beg_val decimal(15,8), end_year int, end_val decimal(15,8), avg_change decimal(15,8))"
+sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table ma_tlf --export-dir /user/cloudera/project2/out/q3/000000_0
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q3 as select * from ma_tlf order by avg_change asc"
+
+#Q4
+insert overwrite directory '/user/cloudera/project2/out/q4'
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ','
+stored as textfile
+select country_code,
+cast(coalesce(Y2016+2016,Y2015+2015,Y2014+2014,Y2013+2013)-coalesce(Y2016,Y2015,Y2014,Y2013) as int) as yearL,
+coalesce(Y2016,y2015,y2014,y2013) as valueL,
+cast(coalesce(Y2000+2000,Y2001+2001,Y1999+1999,Y2002+2002, y1998+1998)-coalesce(Y2000,Y2001,Y1999,Y2002,1998) as int) as yearF,
+coalesce(y2000,y2001,y1999,y2002,y1998) as valueF,
+(((coalesce(Y2016,y2015,y2014,y2013)-coalesce(y2000,y2001,y1999,y2002,y1998))/coalesce(y2000,y2001,y1999,y2002,y1998))
+(cast(coalesce(Y2016+2016,Y2015+2015,Y2014+2014,Y2013+2013)-coalesce(Y2016,Y2015,Y2014,Y2013) as int) - 
+cast(coalesce(Y2000+2000,Y2001+2001,Y1999+1999,Y2002+20002, y1998+1998)-coalesce(Y2000,Y2001,Y1999,Y2002,1998) as int))) as avg
+from gender_stats where indicator_code = 'SL.TLF.CACT.FE.ZS';
+
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS fe_tlf"
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS fe_tlf(country varchar(3) primary key, beg_year int, beg_val decimal(15,8), end_year int, end_val decimal(15,8), avg_change decimal(15,8))"
+sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table fe_tlf --export-dir /user/cloudera/project2/out/q4/000000_0
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q4 as select * from fe_tlf order by avg_change asc"
