@@ -8,6 +8,8 @@ sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS fe_tlf"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS uem_adv_avg"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS emp_total_avg"
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "DROP TABLE IF EXISTS fe_ed_avgs"
+
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS fe_prm_edu(country varchar(3) primary key, year int, percent decimal(15,8))"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS fe_ter_edu(country varchar(3) primary key, year int, percent decimal(15,8))"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS fe_prm_enrr(Y2016 decimal(15,8),Y2015 decimal(15,8),Y2014 decimal(15,8),Y2013 decimal(15,8),Y2012 decimal(15,8),Y2011 decimal(15,8),Y2010 decimal(15,8),Y2009 decimal(15,8),Y2008 decimal(15,8),Y2007 decimal(15,8),Y2006 decimal(15,8),Y2005 decimal(15,8),Y2004 decimal(15,8),Y2003 decimal(15,8),Y2002 decimal(15,8),Y2001 decimal(15,8),Y2000 decimal(15,8))"
@@ -17,6 +19,8 @@ sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS fe_tlf(country varchar(3) primary key, beg_year int, beg_val decimal(15,8), end_year int, end_val decimal(15,8), avg_change decimal(15,8))"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS uem_adv_avg(y2000 decimal(15,8), y2001 decimal(15,8), y2002 decimal(15,8), y2003 decimal(15,8), y2004 decimal(15,8), y2005 decimal(15,8), y2006 decimal(15,8), y2007 decimal(15,8), y2008 decimal(15,8), y2009 decimal(15,8), y2010 decimal(15,8), y2011 decimal(15,8), y2012 decimal(15,8), y2013 decimal(15,8), y2014 decimal(15,8), y2015 decimal(15,8), y2016 decimal(15,8))"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "CREATE TABLE IF NOT EXISTS emp_total_avg(y2000 decimal(15,8), y2001 decimal(15,8), y2002 decimal(15,8), y2003 decimal(15,8), y2004 decimal(15,8), y2005 decimal(15,8), y2006 decimal(15,8), y2007 decimal(15,8), y2008 decimal(15,8), y2009 decimal(15,8), y2010 decimal(15,8), y2011 decimal(15,8), y2012 decimal(15,8), y2013 decimal(15,8), y2014 decimal(15,8),y2015 decimal(15,8), y2016 decimal(15,8))"
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create table if not exists fe_ed_avgs(indicator_code varchar(255) primary key, final_year int, initial_year int, percent decimal(15,8))"
+
 sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table fe_prm_edu --export-dir /user/cloudera/project2/out/q1/000000_0
 sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table fe_ter_edu --export-dir /user/cloudera/project2/out/q1p2/000000_0
 sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table fe_prm_enrr --export-dir /user/cloudera/project2/out/q2p2/000000_0
@@ -26,6 +30,8 @@ sqoop export --connect jdbc:mysql://localhost/project_2 --username root --passwo
 sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table fe_tlf --export-dir /user/cloudera/project2/out/q4/000000_0
 sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table uem_adv_avg --export-dir /user/cloudera/project2/out/q5/000000_0
 sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table emp_total_avg --export-dir /user/cloudera/project2/out/q5p2/000000_0
+sqoop export --connect jdbc:mysql://localhost/project_2 --username root --password cloudera --input-fields-terminated-by , --input-null-non-string '\\N' --table fe_ed_avgs --export-dir /user/cloudera/project2/out/q2Avgs/000000_0
+
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q1 as select * from fe_prm_edu order by percent asc"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q1p2 as select * from fe_ter_edu order by percent asc"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q2 as select * from fe_prm_enrr"
@@ -35,3 +41,4 @@ sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q4 as select * from fe_tlf order by avg_change asc"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q5 as select * from uem_adv_avg"
 sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q5p1 as select * from emp_total_avg"
+sqoop eval --connect jdbc:mysql://localhost/project_2 --username root --password cloudera -e "create or replace view q2Avgs as select * from fe_ed_avgs order by percent"
